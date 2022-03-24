@@ -25,7 +25,14 @@ source-repository head
 
 library
   exposed-modules:
-      Lib
+      Assignment
+      BoolFm
+      Compiler
+      Contract.Input
+      Contract.Output
+      Contract.Recognizer
+      Operation.Binary
+      Operation.Unary
   other-modules:
       Paths_haskell_logic
   hs-source-dirs:

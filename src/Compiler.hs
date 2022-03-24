@@ -1,7 +1,8 @@
 module Compiler (boolFmToNorFm, constPropNorFm) where
 
-import           BoolFm
-import           Contract.Input
+import           BoolFm          (BinOp (And, Eq, Imp, Nand, Nor, Or, Xor),
+                                  BoolFm (..), UnOp (Not), norCPFmp, norFmp)
+import           Contract.Input  (checkInput1)
 import           Contract.Output (checkOutput)
 
 boolFmToNorFm :: BoolFm -> BoolFm

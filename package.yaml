@@ -1,10 +1,10 @@
 name:                haskell-logic
 version:             0.1.0.0
-github:              "githubuser/haskell-logic"
+github:              "red1bluelost/haskell-logic"
 license:             BSD3
-author:              "Author name here"
+author:              "Micah Weston"
 maintainer:          "example@example.com"
-copyright:           "2022 Author name here"
+copyright:           "2022 Micah Weston"
 
 extra-source-files:
 - README.md
@@ -21,6 +21,9 @@ description:         Please see the README on GitHub at <https://github.com/gith
 
 dependencies:
 - base >= 4.7 && < 5
+- sexpr-parser
+- megaparsec
+- data-default
 
 library:
   source-dirs: src

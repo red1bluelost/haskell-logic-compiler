@@ -14,9 +14,14 @@ where
 import           Assignment          (Assignment, Var, assignmentp, lookup,
                                       varp)
 import           Contract.Input      (checkInput2)
+import           Contract.Output     (checkOutput)
 import           Contract.Recognizer (Recognizer)
+import           Data.Default        (def)
+import           Data.Either         (fromRight)
 import           Operation.Binary    (BinOp (..), bop)
 import           Operation.Unary     (UnOp (..), uop)
+import           Text.Megaparsec     (parse)
+import           Text.SExpression    (SExpr (Atom, List), def, parseSExpr)
 
 data BoolFm
   = T
@@ -55,7 +60,32 @@ instance Show BoolFm where
   show Nil       = "nil"
   show (V v)     = [v]
   show (U o p)   = "(" ++ show o ++ " " ++ show p ++ ")"
-  show (B o p q) = "(" ++ show p ++ " " ++ show o ++ " " ++ show p ++ ")"
+  show (B o p q) = "(" ++ show p ++ " " ++ show o ++ " " ++ show q ++ ")"
+
+instance Read BoolFm where
+  readsPrec _ s = readBoolFm s
+
+readBoolFm :: ReadS BoolFm
+readBoolFm s =
+  let r = parse (parseSExpr def) "" s
+      sexpr = fromRight (error "failed to parse sexpr") r
+      f = sexprToBoolFm sexpr
+   in [(checkOutput f [boolFmp], "")]
+
+sexprToBoolFm :: SExpr -> BoolFm
+sexprToBoolFm (Atom "t") = T
+sexprToBoolFm (Atom "nil") = Nil
+sexprToBoolFm (Atom [c]) = if varp c then V c else error "var must be a lowercase letter"
+sexprToBoolFm (List [Atom os, p]) =
+  let op = read os :: UnOp
+      pt = sexprToBoolFm p
+   in U op pt
+sexprToBoolFm (List [p, Atom os, q]) =
+  let op = read os :: BinOp
+      pt = sexprToBoolFm p
+      qt = sexprToBoolFm q
+   in B op pt qt
+sexprToBoolFm s = error $ "not sure what this is: " ++ show s
 
 bfEval :: BoolFm -> Assignment -> Bool
 bfEval f a = checkInput2 bfEvalImpl f [boolFmp] a [assignmentp]

@@ -11,6 +11,18 @@ instance Show BinOp where
   show Nand = "!^"
   show Nor  = "!v"
 
+instance Read BinOp where
+  readsPrec _ s = [(f s, "")]
+    where
+      f "^"  = And
+      f "v"  = Or
+      f "=>" = Imp
+      f "="  = Eq
+      f "<>" = Xor
+      f "!^" = Nand
+      f "!v" = Nor
+      f _    = error "failed to parse binary operand"
+
 bop :: BinOp -> Bool -> Bool -> Bool
 bop And  = (&&)
 bop Or   = (||)

@@ -40,7 +40,9 @@ packages:
 # - git: https://github.com/commercialhaskell/stack.git
 #   commit: e7b331f14bcffb8367cd58fbfc8b40ec7642100a
 #
-# extra-deps: []
+extra-deps:
+- sexpr-parser-0.2.1.0@sha256:acc2f1ec0534998c81817b3b1aa2f6bb5d7ee89dd99bbcb77bf73ecc7f05913d,1674
+- megaparsec-7.0.5@sha256:45e1f1348fab2783646fdb4d9e6097568981a740951c7356d36d794e2baba305,3902
 
 # Override default flag values for local packages and extra-deps
 # flags: {}

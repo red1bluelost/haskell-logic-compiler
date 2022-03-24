@@ -3,7 +3,21 @@
 # For more information, please see the documentation at:
 #   https://docs.haskellstack.org/en/stable/lock_files
 
-packages: []
+packages:
+- completed:
+    hackage: sexpr-parser-0.2.1.0@sha256:acc2f1ec0534998c81817b3b1aa2f6bb5d7ee89dd99bbcb77bf73ecc7f05913d,1674
+    pantry-tree:
+      size: 624
+      sha256: 49d60ab7d056d4763ee5aead86114e256cecd4a35d908ef733a65ca8b554a252
+  original:
+    hackage: sexpr-parser-0.2.1.0@sha256:acc2f1ec0534998c81817b3b1aa2f6bb5d7ee89dd99bbcb77bf73ecc7f05913d,1674
+- completed:
+    hackage: megaparsec-7.0.5@sha256:45e1f1348fab2783646fdb4d9e6097568981a740951c7356d36d794e2baba305,3902
+    pantry-tree:
+      size: 1428
+      sha256: 1f8baf6e07326f8c8a2dd31de6b2860427f158b0892c52ba5fe9ffeb6cd3bf7f
+  original:
+    hackage: megaparsec-7.0.5@sha256:45e1f1348fab2783646fdb4d9e6097568981a740951c7356d36d794e2baba305,3902
 snapshots:
 - completed:
     size: 590102

@@ -32,25 +32,35 @@ data BoolFm
   deriving (Eq)
 
 boolFmp :: Recognizer BoolFm
+boolFmp T         = True
+boolFmp Nil       = True
 boolFmp (V v)     = varp v
 boolFmp (U _ p)   = boolFmp p
 boolFmp (B _ p q) = boolFmp p && boolFmp q
-boolFmp _         = True
 
 boolFm1p :: Recognizer BoolFm
-boolFm1p (B Nand p q) = boolFm1p p && boolFm1p q
-boolFm1p f            = boolFmp f
+boolFm1p (B Nand _ _) = False
+boolFm1p T            = True
+boolFm1p Nil          = True
+boolFm1p (V v)        = varp v
+boolFm1p (U _ p)      = boolFm1p p
+boolFm1p (B _ p q)    = boolFm1p p && boolFm1p q
 
 norFmp :: Recognizer BoolFm
+norFmp T           = True
+norFmp Nil         = True
+norFmp (V v)       = varp v
+norFmp U {}        = False
 norFmp (B Nor p q) = norFmp p && norFmp q
 norFmp B {}        = False
-norFmp U {}        = False
-norFmp f           = boolFmp f
 
 norNCFmp :: Recognizer BoolFm
-norNCFmp T   = False
-norNCFmp Nil = False
-norNCFmp f   = norFmp f
+norNCFmp T           = False
+norNCFmp Nil         = False
+norNCFmp (V v)       = varp v
+norNCFmp U {}        = False
+norNCFmp (B Nor p q) = norNCFmp p && norNCFmp q
+norNCFmp B {}        = False
 
 norCPFmp :: Recognizer BoolFm
 norCPFmp T   = True

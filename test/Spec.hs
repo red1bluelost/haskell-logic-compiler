@@ -66,7 +66,7 @@ prop_subtype_boolFmp f
   | norNCFmp f = all ($ f) [norFmp, boolFm1p, boolFmp]
   | norFmp f = all ($ f) [boolFm1p, boolFmp]
   | boolFm1p f = all ($ f) [boolFmp]
-  | boolFm1p f = True
+  | boolFmp f = True
   | otherwise = False
 
 prop_boolFmToNorFm :: BoolFm -> Bool

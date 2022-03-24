@@ -39,14 +39,11 @@ constPropNorFm f =
 
 constPropNorFmImpl :: BoolFm -> BoolFm
 constPropNorFmImpl (B Nor p q) =
-  let np = constPropNorFmImpl p
-      nq = constPropNorFmImpl q
-   in f (np, nq)
-  where
-    f (T, _)     = Nil
-    f (_, T)     = Nil
-    f (Nil, Nil) = T
-    f (Nil, nq)  = B Nor nq nq
-    f (np, Nil)  = B Nor np np
-    f (np, nq)   = B Nor np nq
+  case (constPropNorFmImpl p, constPropNorFmImpl q) of
+    (T, _)     -> Nil
+    (_, T)     -> Nil
+    (Nil, Nil) -> T
+    (Nil, nq)  -> B Nor nq nq
+    (np, Nil)  -> B Nor np np
+    (np, nq)   -> B Nor np nq
 constPropNorFmImpl p = p

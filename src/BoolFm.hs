@@ -11,7 +11,8 @@ module BoolFm
   )
 where
 
-import           Assignment          (Assignment, Var, assignmentp, lookup)
+import           Assignment          (Assignment, Var, assignmentp, lookup,
+                                      varp)
 import           Contract.Input      (checkInput2)
 import           Contract.Recognizer (Recognizer)
 import           Operation.Binary    (BinOp (..), bop)
@@ -26,25 +27,23 @@ data BoolFm
   deriving (Eq)
 
 boolFmp :: Recognizer BoolFm
-boolFmp _ = True
+boolFmp (V v) = varp v
+boolFmp _     = True
 
 boolFm1p :: Recognizer BoolFm
-boolFm1p (B Nand _ _) = False
-boolFm1p _            = True
+boolFm1p (B Nand p q) = boolFm1p p && boolFm1p q
+boolFm1p f            = boolFmp f
 
 norFmp :: Recognizer BoolFm
-norFmp (B Nor _ _) = True
+norFmp (B Nor p q) = norFmp p && norFmp q
 norFmp B {}        = False
 norFmp U {}        = False
-norFmp _           = True
+norFmp f           = boolFmp f
 
 norNCFmp :: Recognizer BoolFm
-norNCFmp (B Nor _ _) = True
-norNCFmp B {}        = False
-norNCFmp U {}        = False
-norNCFmp T           = False
-norNCFmp Nil         = False
-norNCFmp _           = True
+norNCFmp T   = False
+norNCFmp Nil = False
+norNCFmp f   = norFmp f
 
 norCPFmp :: Recognizer BoolFm
 norCPFmp T   = True

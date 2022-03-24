@@ -5,7 +5,7 @@ import           Contract.Input
 import           Contract.Output (checkOutput)
 
 boolFmToNorFm :: BoolFm -> BoolFm
-boolFmToNorFm = flip checkOutput [norFmp]
+boolFmToNorFm = flip checkOutput [norFmp] . boolFmToNorFmImpl
 
 boolFmToNorFmImpl :: BoolFm -> BoolFm
 boolFmToNorFmImpl T = T

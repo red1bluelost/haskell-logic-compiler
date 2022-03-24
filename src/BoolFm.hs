@@ -32,8 +32,10 @@ data BoolFm
   deriving (Eq)
 
 boolFmp :: Recognizer BoolFm
-boolFmp (V v) = varp v
-boolFmp _     = True
+boolFmp (V v)     = varp v
+boolFmp (U _ p)   = boolFmp p
+boolFmp (B _ p q) = boolFmp p && boolFmp q
+boolFmp _         = True
 
 boolFm1p :: Recognizer BoolFm
 boolFm1p (B Nand p q) = boolFm1p p && boolFm1p q
@@ -66,26 +68,26 @@ instance Read BoolFm where
   readsPrec _ s = readBoolFm s
 
 readBoolFm :: ReadS BoolFm
-readBoolFm s =
-  let r = parse (parseSExpr def) "" s
-      sexpr = fromRight (error "failed to parse sexpr") r
-      f = sexprToBoolFm sexpr
-   in [(checkOutput f [boolFmp], "")]
+readBoolFm s = case parse (parseSExpr def) "" s of
+  Left _ -> []
+  Right sexpr ->
+    case sexprToBoolFm sexpr of
+      Nothing -> []
+      Just f  -> [(f, "") | boolFmp f]
 
-sexprToBoolFm :: SExpr -> BoolFm
-sexprToBoolFm (Atom "t") = T
-sexprToBoolFm (Atom "nil") = Nil
-sexprToBoolFm (Atom [c]) = if varp c then V c else error "var must be a lowercase letter"
+sexprToBoolFm :: SExpr -> Maybe BoolFm
+sexprToBoolFm (Atom "t") = Just T
+sexprToBoolFm (Atom "nil") = Just Nil
+sexprToBoolFm (Atom [c]) = if varp c then Just $ V c else Nothing
 sexprToBoolFm (List [Atom os, p]) =
-  let op = read os :: UnOp
-      pt = sexprToBoolFm p
-   in U op pt
+  case sexprToBoolFm p of
+    Just pt -> Just $ U (read os :: UnOp) pt
+    Nothing -> Nothing
 sexprToBoolFm (List [p, Atom os, q]) =
-  let op = read os :: BinOp
-      pt = sexprToBoolFm p
-      qt = sexprToBoolFm q
-   in B op pt qt
-sexprToBoolFm s = error $ "not sure what this is: " ++ show s
+  case (sexprToBoolFm p, sexprToBoolFm q) of
+    (Just pt, Just qt) -> Just $ B (read os :: BinOp) pt qt
+    _                  -> Nothing
+sexprToBoolFm s = Nothing
 
 bfEval :: BoolFm -> Assignment -> Bool
 bfEval f a = checkInput2 bfEvalImpl f [boolFmp] a [assignmentp]

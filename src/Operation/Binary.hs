@@ -12,16 +12,14 @@ instance Show BinOp where
   show Nor  = "!v"
 
 instance Read BinOp where
-  readsPrec _ s = [(f s, "")]
-    where
-      f "^"  = And
-      f "v"  = Or
-      f "=>" = Imp
-      f "="  = Eq
-      f "<>" = Xor
-      f "!^" = Nand
-      f "!v" = Nor
-      f _    = error "failed to parse binary operand"
+  readsPrec _ ('^' : s)       = [(And, s)]
+  readsPrec _ ('v' : s)       = [(Or, s)]
+  readsPrec _ ('=' : '>' : s) = [(Imp, s)]
+  readsPrec _ ('=' : s)       = [(Eq, s)]
+  readsPrec _ ('<' : '>' : s) = [(Xor, s)]
+  readsPrec _ ('!' : '^' : s) = [(Nand, s)]
+  readsPrec _ ('!' : 'v' : s) = [(Nor, s)]
+  readsPrec _ _               = []
 
 bop :: BinOp -> Bool -> Bool -> Bool
 bop And  = (&&)

@@ -13,6 +13,8 @@ main = do
     - Haskell requires all functions start with a lowercase.
     - Haskell has a prelude function called lookup so I have to specify
       where I use it.
+  I did use external open source libraries but not for anything required
+  in the challenge.
   -}
 
   {-
@@ -96,8 +98,8 @@ main = do
   {-
   In addition to the requirements, I implemented boolFm->norFm
   (mainly since I had already done it before the requirements
-  were posted). 
-  
+  were posted).
+
   I also implemented parsing of S-Expressions so
   that these examples are easier to show. I ended up using a
   library for the SExpr handling. Figuring out packages and stuff
@@ -137,4 +139,3 @@ main = do
       "(p !v q)",
       "(((! p)  => (q v r)) !^ p)"
     ]
-
